@@ -1,7 +1,7 @@
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from ...core import bot, get_context
-from ..questcore import poll_manager, build_keyboard
+from kdimb_bot.core import bot, get_context
+from kdimb_bot.questions.questcore import poll_manager, build_keyboard
 
 def register_handlers():
     
