@@ -44,6 +44,7 @@ def register_handlers():
                     user_id = user.id,
                     user_name = user.first_name,
                     message_id = sent_msg.message_id,
+                    question = question,
                     strategy = "antispam",
                     on_timeout = lambda cid, uid, uname, msgid: timeout_user(cid, uid, uname, msgid)
                 )
@@ -68,7 +69,7 @@ def register_handlers():
         is_correct, poll = poll_manager.check_answer(
             call.message.chat.id,
             call.from_user.id,
-            int(call.data.split("_")[2])
+            int(call.data.split("_")[1])
         )
         
         if not poll:
