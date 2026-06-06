@@ -5,10 +5,10 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from dataclasses import dataclass, field
 
-from .classes.questions import Question, QuestionGiver
-from .classes.messages import MessageGiver
-from .data.question_list import antispam_question_giver, quiz_question_giver
-from .data.message_list import antispam_message_giver, quiz_message_giver
+from kdimb_bot.questions.classes.questions import Question, QuestionGiver
+from kdimb_bot.questions.classes.messages import MessageGiver
+from kdimb_bot.questions.data.question_list import antispam_question_giver, quiz_question_giver
+from kdimb_bot.questions.data.message_list import antispam_message_giver, quiz_message_giver
 
 TIMER_SEC = 60.0
 
