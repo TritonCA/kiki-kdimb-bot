@@ -1,4 +1,4 @@
-from ..classes.messages import Message, MessageSet, MessageGiver
+from kdimb_bot.questions.classes.messages import Message, MessageSet, MessageGiver
 
 ANTISPAM_MESSAGES = MessageSet(
     right_messages = [
