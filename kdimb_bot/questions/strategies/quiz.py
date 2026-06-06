@@ -1,5 +1,5 @@
-from ...core import bot
-from ..questcore import poll_manager, build_keyboard
+from kdimb_bot.core import bot
+from kdimb_bot.questions.questcore import poll_manager, build_keyboard
 
 def register_handlers():
     
