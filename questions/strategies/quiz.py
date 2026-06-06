@@ -16,6 +16,18 @@ def register_handlers():
     def start_quiz(chat_id: int, user_id: int, user_name: str, chat_type: str):
         print(f"[QUIZ] Запрос от {user_name} в чате {chat_id} (тип: {chat_type})")
         
+        old_poll = poll_manager.get_poll(chat_id, user_id)
+        if old_poll:
+            try:
+                bot.edit_message_text(
+                    "Вопрос устарел, новый ниже",
+                    chat_id,
+                    old_poll.message_id
+                )
+            except:
+                pass
+            poll_manager.remove_poll(chat_id, user_id)
+        
         question = poll_manager.get_question_giver(strategy="quiz").give()
         
         sent_msg = bot.send_message(
