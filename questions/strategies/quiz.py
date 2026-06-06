@@ -14,48 +14,41 @@ def register_handlers():
                    message.from_user.first_name, message.chat.type)
         
     def start_quiz(chat_id: int, user_id: int, user_name: str, chat_type: str):
-        print(f"[QUIZ] Запрос от {user_name} в чате {chat_id} (тип: {chat_type})")
         
         old_poll = poll_manager.get_poll(chat_id, user_id)
         if old_poll:
             try:
-                bot.edit_message_text(
-                    "Вопрос устарел, новый ниже",
-                    chat_id,
-                    old_poll.message_id
-                )
-            except:
-                pass
+                bot.edit_message_text("Вопрос устарел", chat_id, old_poll.message_id)
+            except Exception as e:
+                print(f"[QUIZ] Ошибка замены: {e}")
             poll_manager.remove_poll(chat_id, user_id)
         
-        question = poll_manager.get_question_giver(strategy="quiz").give()
+        question = poll_manager.get_question_giver("quiz").give()
         
-        sent_msg = bot.send_message(
-            chat_id,
-            f"{question.text}",
-            reply_markup=build_keyboard(question, prefix='qz')
-        )
+        sent_msg = bot.send_message(chat_id, question.text, reply_markup=build_keyboard(question, prefix='qz'))
         
         poll_manager.create_poll(
-            chat_id = chat_id,
-            user_id = user_id,
-            user_name = user_name,
-            message_id = sent_msg.message_id,
-            strategy = "quiz",
-            on_timeout=lambda cid, uid, uname, msgid: timeout_quiz(cid, uid, uname, msgid)
+            chat_id = chat_id, 
+            user_id = user_id, 
+            user_name = user_name, 
+            message_id = sent_msg.message_id, 
+            question = question, 
+            strategy = "quiz", 
+            on_timeout = lambda cid, uid, uname, msgid: timeout_quiz(cid, uid, uname, msgid)
         )
+        
         
     @bot.callback_query_handler(func=lambda call: call.data.startswith("qz_"))
     def handle_quiz_answer(call):
-        is_correct, poll = poll_manager.check_answer(
-            call.message.chat.id,
-            call.from_user.id,
-            int(call.data.split("_")[2])
-        )
+        
+        answer_id = int(call.data.split("_")[1])
+        
+        is_correct, poll = poll_manager.check_answer(call.message.chat.id, call.from_user.id, answer_id)
         
         if not poll:
             bot.answer_callback_query(call.id, "Вопрос уже не актуален")
             return
+        
         
         poll_manager.remove_poll(call.message.chat.id, call.from_user.id)
         
@@ -75,7 +68,7 @@ def register_handlers():
             wrong_msg = msg_giver.give_wrong(call.from_user.first_name)
             
             bot.edit_message_text(
-                f"{wrong_msg}\n\n Правильный ответ: *{correct_text}*",
+                f"{wrong_msg}\n\nПравильный ответ: *{correct_text}*",
                 call.message.chat.id,
                 call.message.message_id,
                 parse_mode='Markdown'
