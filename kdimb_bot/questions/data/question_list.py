@@ -1,4 +1,4 @@
-from ..classes.questions import Question, QuestionSet, QuestionGiver
+from kdimb_bot.questions.classes.questions import Question, QuestionSet, QuestionGiver
 
 ANTISPAM_QUESTIONS = QuestionSet([
     Question(
