@@ -2,12 +2,12 @@ import os
 import telebot
 from threading import Thread
 
-from .flask_support.flask_sup import flask_thread
+from flask_support.flask_sup import flask_thread
 
-from .core import *
+from core import *
 
-from .questions.strategies.antispam import register_handlers as register_antispam
-from .questions.strategies.quiz import register_handlers as register_quiz
+from questions.strategies.antispam import register_handlers as register_antispam
+from questions.strategies.quiz import register_handlers as register_quiz
 
 START_MESSAGE = "Я Кики. Меня потеряли, ваша группа меня ищет? Добавьте меня туда. (Уверяю, мне можно доверить права администратора)"
 
