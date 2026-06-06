@@ -17,7 +17,7 @@ def build_keyboard(question, prefix: str = "q", row_count: int = 1) -> InlineKey
     buttons = [
         InlineKeyboardButton(
             text,
-            callback_data=f"{prefix}_{question.correct_option_id}_{answer_id}"
+            callback_data=f"{prefix}_{answer_id}"
         )
         for text, answer_id in question.keyboard_data
     ]
@@ -55,12 +55,9 @@ class PollManager:
         return self._message_givers.get(strategy, self._message_givers['antispam'])    
     
     def create_poll(self, chat_id: int, user_id: int, user_name: str,
-                    message_id: int, strategy: str = "antispam",
+                    message_id: int, question: Question, strategy: str = "antispam",
                     on_timeout: Optional[Callable] = None) -> Poll:
         self.remove_poll(chat_id, user_id)
-        
-        question_giver = self.get_question_giver(strategy)
-        question = question_giver.give()
         
         poll = Poll(
             question = question,
