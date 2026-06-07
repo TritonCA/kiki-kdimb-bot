@@ -63,17 +63,27 @@ def register_handlers():
             print(f"[QUIZ] {call.from_user.first_name} ответил правильно")
             
         else:
-            correct_text = poll.question.options[poll.question.correct_option_id]
             msg_giver = poll_manager.get_message_giver("quiz")
             wrong_msg = msg_giver.give_wrong(call.from_user.first_name)
             
+            correct_options = poll.question.correct_option_id
+            if type(correct_options) == list:
+                corrects = [poll.question.options[correct] for correct in correct_options]
+                correct_text = "\n".join(corrects)
+                message_text = f"{wrong_msg}\n\nПравильные ответы:\n{correct_text}"
+            elif type(correct_options) == int:
+                correct_text = poll.question.options[correct_options]
+                message_text = f"{wrong_msg}\n\nПравильный ответ:\n{correct_text}"
+            else:
+                message_text = f"{wrong_msg}\n\nПравильного ответа не было, я тебя обманула"
+            
             bot.edit_message_text(
-                f"{wrong_msg}\n\nПравильный ответ: *{correct_text}*",
+                f"{message_text}",
                 call.message.chat.id,
                 call.message.message_id,
                 parse_mode='Markdown'
             )
-            print(f"[QUIZ] {call.from_user.first_name} ошибся (правильно: {correct_text})")
+            print(f"[QUIZ] {call.from_user.first_name} ошибся")
             
     def timeout_quiz(chat_id: int, user_id: int, user_name: str, message_id: int):
         msg_giver = poll_manager.get_message_giver("quiz")

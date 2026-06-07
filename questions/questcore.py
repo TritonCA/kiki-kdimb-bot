@@ -10,7 +10,7 @@ from questions.classes.messages import MessageGiver
 from questions.data.question_list import antispam_question_giver, quiz_question_giver
 from questions.data.message_list import antispam_message_giver, quiz_message_giver
 
-TIMER_SEC = 60.0
+TIMER_SEC = 30.0
 
 def build_keyboard(question, prefix: str = "q", row_count: int = 1) -> InlineKeyboardMarkup:
     kb = InlineKeyboardMarkup(row_width = row_count)
